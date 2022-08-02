@@ -3,7 +3,5 @@
     "source.fixAll.eslint": true
   },
   "editor.formatOnSave": false,
-  "marquee.widgets.npm-stats.packageNames": [
-    "api-challenge"
-  ]
+  "marquee.widgets.npm-stats.packageNames": ["api-challenge"]
 }

@@ -11,6 +11,6 @@ export class CampusController {
   @OpenAPI({ summary: 'check users and random for him seat' })
   async getUserById(@Param('id') exam_id: string): Promise<any> {
     const findOneUserData: User = await this.userService.examRandomSeat(exam_id);
-    return { data: findOneUserData, message: 'findOne' };
+    return { data: findOneUserData, message: 'Random seat Done' };
   }
 }

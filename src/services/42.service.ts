@@ -5,6 +5,8 @@ import { User } from '@interfaces/users.interface';
 import userModel from '@models/users.model';
 import { isEmpty } from '@utils/util';
 import axios from 'axios';
+import _ from 'lodash';
+import labMaps from '@/utils/campus';
 
 class CampusServiec {
   public async findAllUser(): Promise<User[]> {
@@ -13,11 +15,18 @@ class CampusServiec {
   }
 
   //get user loction
-  public async examRandomSeat(exam_id: string): Promise<User> {
-    // step One: get exam info [location,nbr_subscribers, name_exam]
-    // step Two : get lab info .
+  public async examRandomSeat(exam_id: string): Promise<any> {
+    const lab = new labMaps();
     const { data } = await axios.get(`/v2/events/${exam_id}/events_users`);
-    return data;
+    const RandomSeat: any[] = _.map(data, (user: any) => {
+      return {
+        userId: user.user.login,
+        email: user.user.email,
+        lastSeat: user.user.location,
+        newSeat: null,
+      };
+    });
+    return lab.randomSeat(['lab1', 'lab2'], RandomSeat);
   }
 }
 

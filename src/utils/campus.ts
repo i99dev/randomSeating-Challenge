@@ -1,4 +1,16 @@
-// import _ from 'lodash';
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   campus.ts                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/05 11:23:37 by marvin            #+#    #+#             */
+/*   Updated: 2022/08/05 11:25:19 by marvin           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+import _ from 'lodash';
 
 class labMaps {
   private campus: any = {
@@ -297,46 +309,57 @@ class labMaps {
       },
     },
   };
-  public getCampus(): any {
-    return this.campus;
-  }
-  public setCampus(campus: any): void {
-    this.campus = campus;
-  }
+
   public getLab(lab: string): any {
     return this.campus[lab];
   }
-  public setLab(lab: string, labData: any): void {
-    this.campus[lab] = labData;
-  }
+
   public getRow(lab: string, row: string): any {
     return this.campus[lab][row];
   }
+
   public getSeat(lab: string, row: string, seat: string): any {
     return this.campus[lab][row][seat];
   }
-  public setSeat(lab: string, row: string, seat: string, user: string): void {
-    this.campus[lab][row][seat] = user;
+
+  public setSeat(lab: string, row: string, seat: string, value: any): void {
+    this.campus[lab][row][seat] = value;
   }
-  public getUser(lab: string, row: string, seat: string): any {
-    return this.campus[lab][row][seat];
+
+  public getCampus(): any {
+    return this.campus;
   }
-  public setUser(lab: string, row: string, seat: string, user: string): void {
-    this.campus = {
-      ...this.campus,
-      [lab]: {
-        ...this.campus[lab],
-        [row]: {
-          ...this.campus[lab][row],
-          [seat]: user,
-        },
-      },
-    };
+
+  public setCampus(campus: any): void {
+    this.campus = campus;
+  }
+
+  public getLocation(lab: string, row: string, seat: string): string {
+    return lab + row + seat;
+  }
+
+  public searchUserSeat(lsearch: string): any {
+    const result: any = [];
+    for (const lab in this.campus) {
+      for (const row in this.campus[lab]) {
+        for (const seat in this.campus[lab][row]) {
+          if (this.campus[lab][row][seat] == lsearch) {
+            result.push(this.getLocation(lab, row, seat));
+          }
+        }
+      }
+    }
+    if (result.length == 0) {
+      return null;
+    }
+    return result[0];
   }
 }
 
-const test = new labMaps();
-test.setUser('lap3', 'r1', 's2', 'oal-tena');
-console.log(test.getRow('lap1', 'r1'));
-
+// const test = new labMaps();
+// test.setSeat('lab1', 'r1', 's1', 'test');
+// console.log(test.getLab('lab1'));
+// console.log(test.getRow('lab1', 'r1'));
+// console.log(test.getSeat('lab1', 'r1', 's1'));
+// console.log(test.searchUserSeat('test'));
 export default labMaps;

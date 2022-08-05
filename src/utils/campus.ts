@@ -6,12 +6,19 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 11:23:37 by marvin            #+#    #+#             */
-/*   Updated: 2022/08/05 11:25:19 by marvin           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:02:57 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import _ from 'lodash';
+interface userArray {
+  userId: string;
+  lastSeat: string;
+  newSeat: string;
+}
 
+interface campusObject {
+  [key: string]: object;
+}
 class labMaps {
   private campus: any = {
     lab1: {
@@ -354,12 +361,88 @@ class labMaps {
     }
     return result[0];
   }
+
+  private getSeatIndex(row: string): number {
+    return parseInt(row.substring(1, 14));
+  }
+
+  private isOdd(num: number): boolean {
+    return num % 2 == 1;
+  }
+
+  private isEven(num: number): boolean {
+    return num % 2 == 0;
+  }
+  public randomSeat(lab: string[], user: any[]): campusObject | any {
+    let numbersOfSeat = 0;
+    const checkLab = lab.map(l => {
+      if (this.campus[l] == undefined) {
+        return {
+          error: true,
+          message: `${l} not found`,
+        };
+      }
+      return {
+        error: false,
+        message: `${l} found`,
+      };
+    });
+    if (checkLab.some(c => c.error)) {
+      return checkLab.find(c => c.error).message;
+    }
+
+    // get space seat
+    for (const l of lab) {
+      for (const row in this.campus[l]) {
+        for (const seat in this.campus[l][row]) {
+          if (this.campus[l][row][seat] == null) {
+            numbersOfSeat++;
+          }
+        }
+      }
+    }
+    numbersOfSeat = numbersOfSeat / 2;
+    for (const u of user) {
+      for (const l of lab) {
+        for (const row in this.campus[l]) {
+          for (const seat in this.campus[l][row]) {
+            if (
+              this.campus[l][row][seat] == null &&
+              u.lastSeat != this.getLocation(l, row, seat) &&
+              u.newSeat == null &&
+              this.isOdd(this.getSeatIndex(seat))
+            ) {
+              this.setSeat(l, row, seat, u.userId);
+              u.newSeat = this.getLocation(l, row, seat);
+              numbersOfSeat--;
+              if (numbersOfSeat == 0) {
+                //error if no seat available
+                return {
+                  error: true,
+                  message: `No seat available`,
+                };
+              }
+            }
+            continue;
+          }
+        }
+      }
+    }
+    return user;
+  }
 }
 
 // const test = new labMaps();
-// test.setSeat('lab1', 'r1', 's1', 'test');
-// console.log(test.getLab('lab1'));
-// console.log(test.getRow('lab1', 'r1'));
-// console.log(test.getSeat('lab1', 'r1', 's1'));
-// console.log(test.searchUserSeat('test'));
+// console.log(
+//   test.randomSeat(
+//     ['lab1', 'lab2'],
+//     [
+//       { userId: 'test', lastSeat: 'lab1r1s2' },
+//       { userId: 'test2', lastSeat: 'lab1r1s3' },
+//       { userId: 'test3', lastSeat: 'lab1r1s8' },
+//       { userId: 'test4', lastSeat: 'lab1r1s10' },
+//     ],
+//   ),
+// );
+// console.log(test.searchUserSeat('test2'));
 export default labMaps;

@@ -1,19 +1,11 @@
 import { hash } from 'bcrypt';
-import { CreateUserDto } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
-import { User } from '@interfaces/users.interface';
-import userModel from '@models/users.model';
 import { isEmpty } from '@utils/util';
 import axios from 'axios';
 import _ from 'lodash';
 import labMaps from '@/utils/campus';
 
 class CampusServiec {
-  public async findAllUser(): Promise<User[]> {
-    const users: User[] = userModel;
-    return users;
-  }
-
   //get user loction
   public async examRandomSeat(exam_id: string): Promise<any> {
     const lab = new labMaps();
@@ -26,6 +18,10 @@ class CampusServiec {
         newSeat: null,
       };
     });
+    //httpexception
+    if (isEmpty(RandomSeat)) {
+      throw new HttpException(404, 'No seat found');
+    }
     return lab.randomSeat(['lab1', 'lab2'], RandomSeat);
   }
 }

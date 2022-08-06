@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { defaultMetadataStorage } from 'class-transformer';
+import { defaultMetadataStorage } from 'class-transformer/cjs/storage';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
@@ -86,12 +86,14 @@ class App {
       components: {
         schemas,
         securitySchemes: {
-          basicAuth: {
-            scheme: 'basic',
+          bearerAuth: {
+            scheme: 'bearer',
             type: 'http',
+            bearerFormat: 'JWT',
           },
         },
       },
+      security: [{ bearerAuth: [] }],
       info: {
         description: 'Generated with `routing-controllers-openapi`',
         title: 'A sample API',

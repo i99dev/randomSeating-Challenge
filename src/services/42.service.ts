@@ -1,9 +1,8 @@
-import { hash } from 'bcrypt';
+import labMaps from '@/utils/campus';
 import { HttpException } from '@exceptions/HttpException';
 import { isEmpty } from '@utils/util';
 import axios from 'axios';
 import _ from 'lodash';
-import labMaps from '@/utils/campus';
 
 class CampusServiec {
   //get user loction
